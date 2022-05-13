@@ -1,4 +1,4 @@
-**This is a SQL query using CTE(Common Table Expression) to calculate the average amount paid...**
+This is a SQL query using CTE(Common Table Expression) to calculate the average amount paid...
 
 
 
@@ -21,7 +21,7 @@ SELECT AVG(Total_Amount_Paid) Average_Amount_Paid
 FROM Average_Amount_cte;
 
 
-**This is a SQL query using CTE(Common Table Expression) to count the number of customers living in each country.**
+This is a SQL query using CTE(Common Table Expression) to count the number of customers living in each country.
 
 
 WITH Top_Customer_Count_cte (customer_id,first_name,last_name,country,city,Total_Amount_Paid) AS

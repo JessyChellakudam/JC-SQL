@@ -1,4 +1,4 @@
-**To check for duplicate values in the Film table**
+#To check for duplicate values in the Film table
 
 SELECT title, release_year, language_id, rental_duration, 
 COUNT(*)
@@ -6,14 +6,14 @@ FROM film
 GROUP BY title, release_year, language_id, rental_duration
 HAVING COUNT(*) >1;
 
-To check for non-uniform values in the Film table using DISTINCT:
+**To check for non-uniform values in the Film table using DISTINCT**
 
 SELECT DISTINCT rating,COUNT(*)        
 FROM film
 GROUP BY rating
 ORDER BY COUNT(*);
 
-Descriptive statistics for numerical columns in the film table
+**To get the Descriptive statistics for numerical columns in the film table**
 
 SELECT MIN(rental_rate) AS min_rent,
        MAX(rental_rate) AS max_rent,
@@ -22,7 +22,7 @@ SELECT MIN(rental_rate) AS min_rent,
        COUNT(*) AS count_rows
 FROM film;
 
-Descriptive statistics for non-numerical columns in the customer table
+**To get the Descriptive statistics for non-numerical columns in the customer table**
 
 SELECT MODE() WITHIN GROUP (ORDER BY customer_id) AS customer_id,
 	MODE() WITHIN GROUP (ORDER BY first_name) AS First_name,
@@ -31,7 +31,7 @@ SELECT MODE() WITHIN GROUP (ORDER BY customer_id) AS customer_id,
 	MODE()WITHIN GROUP (ORDER BY active) AS active_customer
 FROM customer;
 
-Descriptive statistics for numerical columns in the customer table
+**To get the Descriptive statistics for numerical columns in the customer table**
 
 SELECT COUNT(customer_id) AS Count_of_customers,
 	COUNT(first_name) AS count_of_firstname,
@@ -40,7 +40,7 @@ SELECT COUNT(customer_id) AS Count_of_customers,
        	COUNT(*) AS count_rows
 FROM customer;
 
-To find the top 10 countries for Rockbuster in terms of customer numbers
+**To find the top 10 countries for Rockbuster in terms of customer numbers**
 
 SELECT D.country, 
 COUNT(customer_id) AS Number_of_Customers
@@ -52,7 +52,7 @@ GROUP BY country
 ORDER BY Number_of_Customers DESC
 LIMIT 10;
 
-To find the top 10 cities within the top 10 countries for Rockbuster in terms of customer numbers
+**To find the top 10 cities within the top 10 countries for Rockbuster in terms of customer numbers**
 
 SELECT T.city,D.country,
 COUNT(customer_id) AS Number_of_Customers
@@ -64,7 +64,7 @@ WHERE D.country IN('India','China','United States','Japan','Mexico','Brazil',
 				   'Russian Federation','Philippines','Turkey','Indonesia')
 GROUP BY T.city, D.country ORDER BY Number_of_Customers DESC LIMIT 10;
 
-To find the top 5 customers in the top 10 cities who have paid the highest total amounts to Rockbuster
+**To find the top 5 customers in the top 10 cities who have paid the highest total amounts to Rockbuster**
 
 SELECT P.customer_id,C.first_name,C.Last_name,D.country,T.city,
 SUM(P.amount) AS Total_Amount_Paid
@@ -81,7 +81,7 @@ GROUP BY P.customer_id, C.first_name,C.Last_name,D.country,T.city
 ORDER BY Total_Amount_Paid DESC 
 LIMIT 5;
 
-To find the average amount paid by the top 5 customers in the top 10 cities within the top 10 countries
+**To find the average amount paid by the top 5 customers in the top 10 cities within the top 10 countries**
 
 SELECT AVG(Total_Amount_Paid) Average_Amount_Paid
 FROM

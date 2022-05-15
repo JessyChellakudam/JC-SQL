@@ -1,0 +1,148 @@
+**To check for duplicate values in the Film table**
+	
+
+SELECT title, release_year, language_id, rental_duration, 
+	COUNT(*)
+	FROM film
+	GROUP BY title, release_year, language_id, rental_duration
+	HAVING COUNT(*) >1;
+	
+
+	**To check for non-uniform values in the Film table using DISTINCT**
+	
+
+	SELECT DISTINCT rating,COUNT(*)        
+	FROM film
+	GROUP BY rating
+	ORDER BY COUNT(*);
+	
+
+	**To get the Descriptive statistics for numerical columns in the film table**
+	
+
+	SELECT MIN(rental_rate) AS min_rent,
+	       MAX(rental_rate) AS max_rent,
+	       AVG(rental_rate) AS avg_rent,
+	       COUNT(rental_rate) AS count_rent_values,
+	       COUNT(*) AS count_rows
+	FROM film;
+	
+
+	**To get the Descriptive statistics for non-numerical columns in the customer table**
+	
+
+	SELECT MODE() WITHIN GROUP (ORDER BY customer_id) AS customer_id,
+		MODE() WITHIN GROUP (ORDER BY first_name) AS First_name,
+		MODE()WITHIN GROUP (ORDER BY last_name) AS last_name,
+		MODE()WITHIN GROUP (ORDER BY activebool) AS activebool,
+		MODE()WITHIN GROUP (ORDER BY active) AS active_customer
+	FROM customer;
+	
+
+	**To get the Descriptive statistics for numerical columns in the customer table**
+	
+
+	SELECT COUNT(customer_id) AS Count_of_customers,
+		COUNT(first_name) AS count_of_firstname,
+		COUNT(last_name) AS count_of_lastname,
+		COUNT(address_id) AS Count_of_address,
+	       	COUNT(*) AS count_rows
+	FROM customer;
+	
+
+	**To find the top 10 countries for Rockbuster in terms of customer numbers**
+	
+
+	SELECT D.country, 
+	COUNT(customer_id) AS Number_of_Customers
+	FROM customer C
+	INNER JOIN address A ON C.address_id=A.address_id
+	INNER JOIN city T ON A.city_id=T.city_id
+	INNER JOIN country D ON T.country_id=D.country_id
+	GROUP BY country
+	ORDER BY Number_of_Customers DESC
+	LIMIT 10;
+	
+
+	**To find the top 10 cities within the top 10 countries for Rockbuster in terms of customer numbers**
+	
+
+	SELECT T.city,D.country,
+	COUNT(customer_id) AS Number_of_Customers
+	FROM customer C
+	INNER JOIN address A ON C.address_id=A.address_id
+	INNER JOIN city T ON A.city_id=T.city_id
+	INNER JOIN country D ON T.country_id=D.country_id
+	WHERE D.country IN('India','China','United States','Japan','Mexico','Brazil',
+					   'Russian Federation','Philippines','Turkey','Indonesia')
+	GROUP BY T.city, D.country ORDER BY Number_of_Customers DESC LIMIT 10;
+	
+
+	**To find the top 5 customers in the top 10 cities who have paid the highest total amounts to Rockbuster**
+	
+
+	SELECT P.customer_id,C.first_name,C.Last_name,D.country,T.city,
+	SUM(P.amount) AS Total_Amount_Paid
+	FROM customer C
+	INNER JOIN payment P ON C.customer_id=P.customer_id
+	INNER JOIN address A ON C.address_id=A.address_id
+	INNER JOIN city T ON A.city_id=T.city_id
+	INNER JOIN country D ON T.country_id=D.country_id
+	WHERE D.country IN('India','China','United States','Japan','Mexico','Brazil',
+					   'Russian Federation','Philippines','Turkey','Indonesia')
+	AND T.city IN('Aurora','Atlixco','Xintai','Adoni','Dhule(Dhulia)',
+				  'Kurashiki','Pingxiang','Sivas','Celaya','So Leopoldo')
+	GROUP BY P.customer_id, C.first_name,C.Last_name,D.country,T.city
+	ORDER BY Total_Amount_Paid DESC 
+	LIMIT 5;
+	
+
+	**To find the average amount paid by the top 5 customers in the top 10 cities within the top 10 countries**
+	
+
+	SELECT AVG(Total_Amount_Paid) Average_Amount_Paid
+	FROM
+	(SELECT P.customer_id,C.first_name,C.Last_name,D.country,T.city,
+	SUM(P.amount) AS Total_Amount_Paid
+	FROM customer C
+	INNER JOIN payment P ON C.customer_id=P.customer_id
+	INNER JOIN address A ON C.address_id=A.address_id
+	INNER JOIN city T ON A.city_id=T.city_id
+	INNER JOIN country D ON T.country_id=D.country_id
+	WHERE D.country IN('India','China','United States','Japan','Mexico','Brazil',
+					   'Russian Federation','Philippines','Turkey','Indonesia')
+	AND T.city IN('Aurora','Atlixco','Xintai','Adoni','Dhule(Dhulia)',
+				  'Kurashiki','Pingxiang','Sivas','Celaya','So Leopoldo')
+	GROUP BY P.customer_id, C.first_name,C.Last_name,D.country,T.city
+	ORDER BY Total_Amount_Paid DESC 
+	LIMIT 5) AS Total_Amount_Paid;
+	
+
+	**To find out how many of the top 5 customers are based within each country**
+	
+
+	SELECT country.country, COUNT(DISTINCT customer.customer_id) AS All_Customer_Count,
+				COUNT(DISTINCT country.country) AS Top_customer_count
+	FROM
+	(SELECT payment.customer_id, customer.first_name, customer.last_name,country.country,city.city, 
+	 		SUM(payment.amount) AS Total_Amount_Paid
+	FROM payment
+	INNER JOIN customer ON payment.customer_id=customer.customer_id
+	INNER JOIN address ON customer.address_id=address.address_id
+	INNER JOIN city ON address.city_id=city.city_id
+	INNER JOIN country ON city.country_id=country.country_id
+	WHERE country.country IN('India','China','United States','Japan','Mexico','Brazil',
+					   'Russian Federation','Philippines','Turkey','Indonesia')
+	AND city.city IN('Aurora','Atlixco','Xintai','Adoni','Dhule(Dhulia)',
+				  'Kurashiki','Pingxiang','Sivas','Celaya','So Leopoldo')
+	GROUP BY payment.customer_id, customer.first_name, customer.last_name,country.country,city.city
+	ORDER BY Total_Amount_Paid DESC
+	LIMIT 5) AS Top_5_Customers
+	LEFT JOIN customer ON customer.customer_id=customer.customer_id
+	LEFT JOIN address ON customer.address_id=address.address_id
+	LEFT JOIN city ON address.city_id=city.city_id
+	LEFT JOIN country ON city.country_id=country.country_id
+	GROUP BY country.country
+	ORDER BY All_Customer_Count DESC
+	LIMIT 5;
+

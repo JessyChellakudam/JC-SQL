@@ -1,4 +1,4 @@
-#To check for duplicate values in the Film table
+**To check for duplicate values in the Film table**
 
 SELECT title, release_year, language_id, rental_duration, 
 COUNT(*)

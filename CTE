@@ -100,7 +100,7 @@ GROUP BY P.customer_id, C.first_name,C.Last_name,D.country,T.city
 ORDER BY Total_Amount_Paid DESC 
 LIMIT 5) AS Total_Amount_Paid;
 
-To find out how many of the top 5 customers are based within each country
+**To find out how many of the top 5 customers are based within each country**
 
 SELECT country.country, COUNT(DISTINCT customer.customer_id) AS All_Customer_Count,
 			COUNT(DISTINCT country.country) AS Top_customer_count
@@ -127,7 +127,7 @@ GROUP BY country.country
 ORDER BY All_Customer_Count DESC
 LIMIT 5;
 
-This is a SQL query using CTE(Common Table Expression) to calculate the average amount paid...
+**This is a SQL query using CTE(Common Table Expression) to calculate the average amount paid**
 
 WITH Average_Amount_cte AS
 (SELECT P.customer_id,C.first_name,C.Last_name,D.country,T.city,
@@ -148,7 +148,7 @@ SELECT AVG(Total_Amount_Paid) Average_Amount_Paid
 FROM Average_Amount_cte;
 
 
-This is a SQL query using CTE(Common Table Expression) to count the number of customers living in each country.
+**This is a SQL query using CTE(Common Table Expression) to count the number of customers living in each country**
 
 
 WITH Top_Customer_Count_cte (customer_id,first_name,last_name,country,city,Total_Amount_Paid) AS
